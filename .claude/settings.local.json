@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\jack\\\\Desktop\\\\블로그 작성\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\jack\\\\Desktop\\\\블로그 작성\\\\\", \"\"\\) })",
+      "WebSearch",
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\jack\\\\Desktop\\\\블로그 작성\\\\outputs\\\\2026-05-28\" | Select-Object Name, @{N=\"크기\\(KB\\)\";E={[math]::Round\\($_.Length/1KB,1\\)}})",
+      "WebFetch(domain:brunch.co.kr)",
+      "PowerShell(git -C \"c:\\\\Users\\\\jack\\\\Desktop\\\\���α� �ۼ�\" status 2>&1)"
+    ]
+  }
+}

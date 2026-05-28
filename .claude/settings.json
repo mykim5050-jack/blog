@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'File updated. Run quality check before final output.'"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Claude Code needs approval before Gmail send or external publish.'"
+          }
+        ]
+      }
+    ]
+  }
+}
