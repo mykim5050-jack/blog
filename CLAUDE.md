@@ -87,16 +87,16 @@ Claude Code는 다음 순서로 작업한다.
 
 ## 매일 실행 기준
 
-실행 시간은 매일 20:00 KST로 한다.
+실행 시간은 매일 13:00 KST로 한다.
 
-GitHub Actions를 사용할 때는 KST 기준 20:00가 되도록 시간대를 명확히 지정한다.
+GitHub Actions를 사용할 때는 KST 기준 13:00가 되도록 시간대를 명확히 지정한다.
 
 ```yaml
 name: Daily Brunch Trend Report
 
 on:
   schedule:
-    - cron: "0 20 * * *"
+    - cron: "0 13 * * *"
       timezone: "Asia/Seoul"
   workflow_dispatch:
 
@@ -115,7 +115,7 @@ UTC 방식 대체:
 ```yaml
 on:
   schedule:
-    - cron: "0 11 * * *"
+    - cron: "0 4 * * *"
 ```
 
 ## 사용자 브랜드 정보
