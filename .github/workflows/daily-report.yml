@@ -1,0 +1,65 @@
+name: 브런치 데일리 리포트
+
+on:
+  schedule:
+    - cron: '0 4 * * *'  # 매일 13:00 KST
+  workflow_dispatch:       # 수동 실행 버튼
+
+permissions:
+  contents: write
+
+jobs:
+  daily-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Claude Code 설치
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: .env 파일 생성
+        run: |
+          cat > .env << EOF
+          GMAIL_CLIENT_ID=${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET=${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN=${{ secrets.GMAIL_REFRESH_TOKEN }}
+          EOF
+
+      - name: 데일리 리포트 실행
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "오늘 날짜 기준으로 김용태 브런치 데일리 리포트를 실행하라. CLAUDE.md의 전체 지침을 따른다.
+
+          1. drafts/published_titles.txt 를 읽어 중복 글감을 제외한다.
+          2. 웹 검색으로 AI·창업·정부지원사업 트렌드를 수집한다.
+          3. 상위 글감 10개를 35점 만점으로 점수화한다.
+          4. 최고점 글감으로 브런치 초안 2,500~3,500자를 작성한다.
+          5. outputs/\$(date +%Y-%m-%d)/ 폴더에 산출물 5개를 저장한다.
+             - sources.csv
+             - trend_report.md
+             - brunch_draft.md
+             - brunch_publish.txt (특수문자 없음 + 이미지 프롬프트 2개)
+             - notion_table.md
+             - email_draft.md
+          6. 오늘 선정된 글 제목을 drafts/published_titles.txt 에 추가한다.
+          7. 품질 검증 체크리스트 10개를 실행한다.
+
+          절대 금지: Gmail 실제 발송, 확인되지 않은 수치 생성, 허구 사례 작성" \
+          --dangerously-skip-permissions
+
+      - name: Git 커밋 및 푸시
+        run: |
+          git config --global user.email "mykim5050@gmail.com"
+          git config --global user.name "김용태"
+          git add .
+          git diff --staged --quiet || git commit -m "리포트 $(date +%Y-%m-%d -d 'TZ=Asia/Seoul')"
+          git push
